@@ -1,6 +1,9 @@
 ﻿namespace ClickBusAPIIntegration.Tests.Basic
 {
+    using ClickBusAPIIntegration.Commands.Tests;
     using MediatR;
+    using Shouldly;
+    using StructureMap;
     using System;
     using System.Threading.Tasks;
     using Xunit;
@@ -14,11 +17,10 @@
             {
                 cfg.Scan(scanner =>
                 {
-                    scanner.AssemblyContainerType<Ping>();
-                    scanner.ConnectImplementationsTOTypeClosing(typeof(IRequestHandler<,>));
+                    scanner.AssemblyContainingType<Ping>(); 
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
                     scanner.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
                 });
-
                 cfg.For<ServiceFactory>().Use<ServiceFactory>(ctx => ctx.GetInstance);
                 cfg.For<IMediator>().Use<Mediator>();
             });
